@@ -4,22 +4,29 @@ import { DeliveryCard } from "@/components/DeliveryCard";
 import { SearchBar } from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for delivery services
 const deliveryServices = [
   {
     id: 1,
-    name: "Express Delivery",
+    name: "Same Day Delivery",
     image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d",
-    price: "$15.99",
+    price: "GHC 35-45",
     category: "Same Day",
     estimatedTime: "2-4 hours"
   },
   {
     id: 2,
-    name: "Standard Delivery",
+    name: "Next Day Delivery",
     image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088",
-    price: "$9.99",
+    price: "GHC 25-30",
     category: "Next Day",
     estimatedTime: "24 hours"
   },
@@ -27,13 +34,15 @@ const deliveryServices = [
     id: 3,
     name: "Economy Delivery",
     image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59",
-    price: "$5.99",
-    category: "Standard",
+    price: "Redeem Coupon",
+    category: "Economy",
     estimatedTime: "2-3 days"
   }
 ];
 
 export default function Index() {
+  const navigate = useNavigate();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -41,9 +50,20 @@ export default function Index() {
         <main className="flex-1 p-6">
           <div className="flex justify-between items-center mb-6">
             <SidebarTrigger />
-            <Button variant="outline" size="icon">
-              <Menu className="h-5 w-5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => navigate("/")}>Home</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>Profile</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/search")}>Search</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/orders")}>Orders</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           
           <div className="max-w-7xl mx-auto space-y-8">
