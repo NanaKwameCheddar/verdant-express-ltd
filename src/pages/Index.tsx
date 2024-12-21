@@ -2,6 +2,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { DeliveryCard } from "@/components/DeliveryCard";
 import { SearchBar } from "@/components/SearchBar";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 // Mock data for delivery services
 const deliveryServices = [
@@ -37,7 +39,12 @@ export default function Index() {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <main className="flex-1 p-6">
-          <SidebarTrigger className="mb-6" />
+          <div className="flex justify-between items-center mb-6">
+            <SidebarTrigger />
+            <Button variant="outline" size="icon">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
           
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="text-center space-y-4">

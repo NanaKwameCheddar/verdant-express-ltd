@@ -1,8 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { MapPin, Package } from "lucide-react";
-import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 export default function Search() {
   return (
@@ -10,48 +9,18 @@ export default function Search() {
       <div className="flex min-h-screen w-full">
         <AppSidebar />
         <div className="flex-1 p-6">
-          <h1 className="text-2xl font-bold mb-6">Search Deliveries</h1>
-          
-          <div className="max-w-2xl space-y-6">
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <div className="flex-1 space-y-2">
-                  <label htmlFor="pickup" className="text-sm font-medium">Pickup Location</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                    <Input id="pickup" placeholder="Enter pickup address" className="pl-10" />
-                  </div>
-                </div>
-                
-                <div className="flex-1 space-y-2">
-                  <label htmlFor="delivery" className="text-sm font-medium">Delivery Location</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                    <Input id="delivery" placeholder="Enter delivery address" className="pl-10" />
-                  </div>
-                </div>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Search</h1>
+            <Button variant="outline" size="icon">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="grid gap-6">
+              <div className="rounded-lg border bg-card p-4">
+                <h2 className="text-lg font-semibold mb-4">Search Results</h2>
+                <p className="text-muted-foreground">No results found. Try adjusting your search.</p>
               </div>
-              
-              <div className="flex gap-4">
-                <div className="flex-1 space-y-2">
-                  <label htmlFor="package" className="text-sm font-medium">Package Details</label>
-                  <div className="relative">
-                    <Package className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                    <Input id="package" placeholder="Package size and weight" className="pl-10" />
-                  </div>
-                </div>
-                
-                <Button className="mt-8" size="lg">
-                  Search Delivery Options
-                </Button>
-              </div>
-            </div>
-            
-            <div className="rounded-lg border bg-card p-4">
-              <p className="text-sm text-muted-foreground">
-                Enter your pickup and delivery locations to see available delivery options and pricing.
-                We'll match you with the best courier for your package.
-              </p>
             </div>
           </div>
         </div>
