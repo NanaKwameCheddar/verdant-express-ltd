@@ -6,10 +6,18 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const [isAdmin] = useState(true); // In a real app, this would come from auth state
+  const [isAdmin] = useState(true);
   const [userRating] = useState(4.5);
+  const navigate = useNavigate();
 
   const renderDashboardPreview = (type: string) => (
     <Card className="w-full">
@@ -42,9 +50,20 @@ export default function Profile() {
         <div className="flex-1 p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Profile</h1>
-            <Button variant="outline" size="icon">
-              <Menu className="h-5 w-5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => navigate("/")}>Home</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/profile")}>Profile</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/search")}>Search</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/orders")}>Orders</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           
           <div className="max-w-4xl mx-auto space-y-6">

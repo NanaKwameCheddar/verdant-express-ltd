@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { DeliveryCard } from "@/components/DeliveryCard";
 import { SearchBar } from "@/components/SearchBar";
@@ -49,7 +49,7 @@ export default function Index() {
         <AppSidebar />
         <main className="flex-1 p-6">
           <div className="flex justify-between items-center mb-6">
-            <SidebarTrigger />
+            <div className="text-xl font-bold">Track Package</div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
