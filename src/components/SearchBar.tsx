@@ -16,7 +16,7 @@ export function SearchBar() {
         </div>
         <Button>
           <Package className="mr-2 h-4 w-4" />
-          Send Package
+          Track Package
         </Button>
       </div>
     </div>
