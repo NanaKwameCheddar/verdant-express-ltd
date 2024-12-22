@@ -2,16 +2,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This will be implemented once Supabase is integrated
-    console.log("Login attempted with:", { email, password });
+    try {
+      await login(email, password);
+      
+      // Determine redirect based on email (mock logic)
+      if (email.includes('admin')) {
+        navigate('/admin');
+      } else if (email.includes('driver')) {
+        navigate('/driver');
+      } else {
+        navigate('/customer');
+      }
+
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+    } catch (error) {
+      toast({
+        title: "Login failed",
+        description: "Please check your credentials and try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
