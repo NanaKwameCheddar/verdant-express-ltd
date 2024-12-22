@@ -12,7 +12,6 @@ import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
-import CustomerDashboard from "./pages/CustomerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +31,6 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/driver" element={<DriverDashboard />} />
-            <Route path="/customer" element={<CustomerDashboard />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
