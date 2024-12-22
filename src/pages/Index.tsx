@@ -1,8 +1,7 @@
-import { AppSidebar } from "@/components/AppSidebar";
 import { DeliveryCard } from "@/components/DeliveryCard";
 import { SearchBar } from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Package } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Mock data for delivery services
 const deliveryServices = [
@@ -44,8 +44,13 @@ export default function Index() {
 
   return (
     <div className="min-h-screen flex flex-col w-full">
-      <header className="border-b">
-        <AppSidebar />
+      <header className="border-b p-4">
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-2">
+            <Package className="h-8 w-8 text-primary" />
+            <span className="text-xl font-bold">Verdant Express</span>
+          </Link>
+        </div>
       </header>
       <main className="flex-1 p-6">
         <div className="flex justify-end mb-6">
