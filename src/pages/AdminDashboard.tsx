@@ -1,52 +1,61 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Users, TrendingUp, Clock } from "lucide-react";
+import { useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { UserManagement } from "@/components/admin/UserManagement"
+import { ParcelManagement } from "@/components/admin/ParcelManagement"
+import { Analytics } from "@/components/admin/Analytics"
+import { SystemLogs } from "@/components/admin/SystemLogs"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { LogOut } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
 
 export default function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState("users")
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    // TODO: Implement actual logout logic when Supabase is integrated
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account",
+    })
+    navigate("/login")
+  }
+
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Total Parcels</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">123</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">GHC 12,345</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">45</div>
-          </CardContent>
-        </Card>
+    <div className="container mx-auto p-6 max-w-7xl">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <Button variant="outline" onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
       </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 lg:w-[400px]">
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="parcels">Parcels</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="logs">Logs</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="users" className="space-y-4">
+          <UserManagement />
+        </TabsContent>
+
+        <TabsContent value="parcels" className="space-y-4">
+          <ParcelManagement />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <Analytics />
+        </TabsContent>
+
+        <TabsContent value="logs" className="space-y-4">
+          <SystemLogs />
+        </TabsContent>
+      </Tabs>
     </div>
-  );
+  )
 }
