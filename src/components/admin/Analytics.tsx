@@ -49,6 +49,44 @@ const statusData = [
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"]
 
+// Chart configurations
+const lineChartConfig = {
+  deliveries: {
+    label: "Deliveries",
+    theme: {
+      light: "#8884d8",
+      dark: "#8884d8"
+    }
+  },
+  revenue: {
+    label: "Revenue",
+    theme: {
+      light: "#82ca9d",
+      dark: "#82ca9d"
+    }
+  }
+}
+
+const barChartConfig = {
+  deliveries: {
+    label: "Deliveries",
+    theme: {
+      light: "#3b82f6",
+      dark: "#3b82f6"
+    }
+  }
+}
+
+const pieChartConfig = {
+  status: {
+    label: "Status",
+    theme: {
+      light: "#8884d8",
+      dark: "#8884d8"
+    }
+  }
+}
+
 export function Analytics() {
   return (
     <div className="space-y-6">
@@ -129,7 +167,7 @@ export function Analytics() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer className="h-[300px]">
+            <ChartContainer className="h-[300px]" config={lineChartConfig}>
               <LineChart data={deliveryData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -152,7 +190,7 @@ export function Analytics() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer className="h-[300px]">
+            <ChartContainer className="h-[300px]" config={barChartConfig}>
               <BarChart data={driverData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -172,7 +210,7 @@ export function Analytics() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer className="h-[300px]">
+            <ChartContainer className="h-[300px]" config={pieChartConfig}>
               <PieChart>
                 <Pie
                   data={statusData}
