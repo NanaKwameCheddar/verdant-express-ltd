@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Mock data for delivery services
 const deliveryServices = [
@@ -39,15 +40,25 @@ const deliveryServices = [
   }
 ];
 
-export default function Index() {
+export default function Customer() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen flex flex-col w-full">
       <header className="border-b p-4">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2">
-            <Package className="h-8 w-8 text-primary" />
+            <img
+              src="/lovable-uploads/423456c0-e86c-4c12-9e6a-212fb9ec9bf2.png"
+              alt="Verdant Express LTD"
+              className="h-8"
+            />
             <span className="text-xl font-bold">Verdant Express</span>
           </Link>
         </div>
@@ -66,6 +77,7 @@ export default function Index() {
               <DropdownMenuItem onClick={() => navigate("/search")}>Search</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/orders")}>Orders</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FeedbackForm } from "@/components/driver/FeedbackForm";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Package, AlertCircle } from "lucide-react";
+import { MapPin, Package, AlertCircle, LogOut } from "lucide-react";
 
 // Mock data - replace with actual API data
 const mockOrders = [
@@ -44,6 +46,8 @@ export default function DriverDashboard() {
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [orders] = useState(mockOrders);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -83,14 +87,32 @@ export default function DriverDashboard() {
     setShowFeedback(true);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Driver Dashboard</h1>
-        <Badge variant={location ? "default" : "destructive"}>
-          <MapPin className="mr-2 h-4 w-4" />
-          {location ? "Location Active" : "Location Required"}
-        </Badge>
+        <div className="flex items-center gap-4">
+          <img
+            src="/lovable-uploads/423456c0-e86c-4c12-9e6a-212fb9ec9bf2.png"
+            alt="Verdant Express LTD"
+            className="h-8"
+          />
+          <h1 className="text-3xl font-bold">Driver Dashboard</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <Badge variant={location ? "default" : "destructive"}>
+            <MapPin className="mr-2 h-4 w-4" />
+            {location ? "Location Active" : "Location Required"}
+          </Badge>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

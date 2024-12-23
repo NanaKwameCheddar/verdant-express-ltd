@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Customer from "./pages/Customer";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
@@ -14,8 +14,27 @@ import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
 import OrderPlacement from "./pages/OrderPlacement";
+import RatingForm from "./components/RatingForm";
 
 const queryClient = new QueryClient();
+
+// Home redirect component based on user role
+const HomeRedirect = () => {
+  const { user } = useAuth();
+  
+  if (!user) return <Navigate to="/login" replace />;
+  
+  switch (user.role) {
+    case 'admin':
+      return <Navigate to="/admin" replace />;
+    case 'driver':
+      return <Navigate to="/driver" replace />;
+    case 'customer':
+      return <Navigate to="/customer" replace />;
+    default:
+      return <Navigate to="/login" replace />;
+  }
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -27,7 +46,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<HomeRedirect />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
@@ -36,6 +55,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/driver" element={<DriverDashboard />} />
             <Route path="/order-placement" element={<OrderPlacement />} />
+            <Route path="/rate/:type/:id" element={<RatingForm />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
