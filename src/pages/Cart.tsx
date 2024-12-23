@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Menu, Trash2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +28,13 @@ const sampleCartItems = [
 
 export default function Cart() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const total = "GHC 63.00";
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen w-full">
@@ -46,6 +53,7 @@ export default function Cart() {
               <DropdownMenuItem onClick={() => navigate("/search")}>Search</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/orders")}>Orders</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
