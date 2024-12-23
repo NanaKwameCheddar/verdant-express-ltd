@@ -45,7 +45,7 @@ const ChartTooltip = ({ payload, label }) => {
   );
 };
 
-const AnalyticsDashboard = () => {
+const Analytics = () => {
   const [deliveryData, setDeliveryData] = useState([]);
   const [statusData, setStatusData] = useState([]);
   const [driverData, setDriverData] = useState([]);
@@ -144,8 +144,7 @@ const AnalyticsDashboard = () => {
   );
 };
 
-export default AnalyticsDashboard;
-
+export default Analytics;
 
 
 
