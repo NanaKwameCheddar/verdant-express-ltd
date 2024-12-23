@@ -10,6 +10,7 @@ import Search from "./pages/Search";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 import DriverDashboard from "./pages/DriverDashboard";
 import OrderPlacement from "./pages/OrderPlacement";
@@ -25,6 +26,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/profile" element={<Profile />} />

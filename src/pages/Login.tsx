@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,13 +17,13 @@ export default function Login() {
     try {
       await login(email, password);
       
-      // Determine redirect based on email (mock logic)
+      // Determine redirect based on email
       if (email.includes('admin')) {
         navigate('/admin');
       } else if (email.includes('driver')) {
         navigate('/driver');
       } else {
-        navigate('/'); // Redirect customers to index page
+        navigate('/customer');
       }
 
       toast({
@@ -80,6 +80,13 @@ export default function Login() {
             Sign In
           </Button>
         </form>
+
+        <div className="text-center text-sm">
+          <span className="text-gray-600">Don't have an account? </span>
+          <Link to="/signup" className="text-primary hover:underline">
+            Sign up
+          </Link>
+        </div>
       </div>
     </div>
   );
