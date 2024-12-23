@@ -6,23 +6,66 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  PieChart, 
+  Pie, 
+  Cell,
+  LineChart,
+  Line,
+  Legend
+} from "recharts"
 import { Package, TrendingUp, Truck, Users } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Mock data - replace with actual data when Supabase is integrated
 const deliveryData = [
-  { name: "Mon", deliveries: 4 },
-  { name: "Tue", deliveries: 3 },
-  { name: "Wed", deliveries: 7 },
-  { name: "Thu", deliveries: 5 },
-  { name: "Fri", deliveries: 6 },
-  { name: "Sat", deliveries: 4 },
-  { name: "Sun", deliveries: 2 },
+  { name: "Mon", deliveries: 4, revenue: 400 },
+  { name: "Tue", deliveries: 3, revenue: 300 },
+  { name: "Wed", deliveries: 7, revenue: 700 },
+  { name: "Thu", deliveries: 5, revenue: 500 },
+  { name: "Fri", deliveries: 6, revenue: 600 },
+  { name: "Sat", deliveries: 4, revenue: 400 },
+  { name: "Sun", deliveries: 2, revenue: 200 },
 ]
+
+const driverData = [
+  { name: "John", deliveries: 15 },
+  { name: "Mike", deliveries: 12 },
+  { name: "Sarah", deliveries: 18 },
+  { name: "David", deliveries: 10 },
+]
+
+const statusData = [
+  { name: "Pending", value: 10 },
+  { name: "In Transit", value: 15 },
+  { name: "Delivered", value: 25 },
+]
+
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28"]
 
 export function Analytics() {
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
+        <Select defaultValue="week">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select timeframe" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="day">Last 24 Hours</SelectItem>
+            <SelectItem value="week">Last Week</SelectItem>
+            <SelectItem value="month">Last Month</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -77,25 +120,80 @@ export function Analytics() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Weekly Deliveries</CardTitle>
-          <CardDescription>
-            Number of deliveries completed per day this week
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer className="h-[300px]" config={{}}>
-            <BarChart data={deliveryData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="deliveries" fill="#3b82f6" />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Deliveries & Revenue</CardTitle>
+            <CardDescription>
+              Delivery count and revenue trends
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer className="h-[300px]">
+              <LineChart data={deliveryData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
+                <Tooltip content={<ChartTooltip />} />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
+                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Deliveries by Driver</CardTitle>
+            <CardDescription>
+              Total deliveries completed by each driver
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer className="h-[300px]">
+              <BarChart data={driverData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip content={<ChartTooltip />} />
+                <Bar dataKey="deliveries" fill="#3b82f6" />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Parcel Status Distribution</CardTitle>
+            <CardDescription>
+              Current distribution of parcel statuses
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer className="h-[300px]">
+              <PieChart>
+                <Pie
+                  data={statusData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {statusData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<ChartTooltip />} />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
