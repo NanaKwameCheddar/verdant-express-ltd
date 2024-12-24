@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FeedbackForm } from "@/components/driver/FeedbackForm";
 import { DriverAnalytics } from "@/components/driver/DriverAnalytics";
+import { OrdersList } from "@/components/driver/OrdersList";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
@@ -13,15 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Package, AlertCircle, LogOut } from "lucide-react";
+import { MapPin, LogOut } from "lucide-react";
 
 export default function DriverDashboard() {
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
@@ -30,69 +23,6 @@ export default function DriverDashboard() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-
-  // Fetch orders with proper UUID validation
-  const { data: orders = [], isLoading: isLoadingOrders } = useQuery({
-    queryKey: ['driverOrders', user?.id],
-    queryFn: async () => {
-      if (!user?.id) throw new Error('User ID is required');
-      
-      const { data, error } = await supabase
-        .from('parcel_orders')
-        .select(`
-          *,
-          feedback(rating, feedback_text)
-        `)
-        .eq('assigned_driver_id', user.id);
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id && user.id.length === 36, // Only run query if we have a valid UUID
-  });
-
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation(position);
-        },
-        (error) => {
-          toast({
-            title: "Location Error",
-            description: "Please enable location services to accept orders",
-            variant: "destructive",
-          });
-        }
-      );
-    }
-
-    // Set up real-time subscription for new orders
-    if (user?.id) {
-      const ordersSubscription = supabase
-        .channel('orders')
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'parcel_orders',
-            filter: `assigned_driver_id=eq.${user.id}`,
-          },
-          (payload) => {
-            toast({
-              title: "New Order Assigned!",
-              description: "You have a new delivery order.",
-            });
-          }
-        )
-        .subscribe();
-
-      return () => {
-        ordersSubscription.unsubscribe();
-      };
-    }
-  }, [user?.id]);
 
   const handleAcceptOrder = async (orderId: string) => {
     if (!location) {
@@ -135,12 +65,12 @@ export default function DriverDashboard() {
     navigate('/login');
   };
 
-  if (isLoadingOrders) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-
   if (!user?.id) {
-    return <div className="flex items-center justify-center min-h-screen">Please log in to continue</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Please log in to continue
+      </div>
+    );
   }
 
   return (
@@ -166,47 +96,11 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-        {orders.map((order) => (
-          <Card key={order.id}>
-            <CardHeader>
-              <CardTitle className="flex justify-between items-center">
-                Order #{order.id.slice(0, 8)}
-                <Badge>{order.status}</Badge>
-              </CardTitle>
-              <CardDescription>{new Date(order.created_at).toLocaleString()}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="text-sm text-muted-foreground">Pickup</div>
-                <div className="font-medium">{order.pickup_address}</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-sm text-muted-foreground">Delivery</div>
-                <div className="font-medium">{order.delivery_address}</div>
-              </div>
-              <div className="flex gap-2">
-                {order.status === "pending" && (
-                  <Button
-                    className="flex-1"
-                    onClick={() => handleAcceptOrder(order.id)}
-                  >
-                    <Package className="mr-2 h-4 w-4" />
-                    Accept Order
-                  </Button>
-                )}
-                <Button
-                  variant="outline"
-                  onClick={() => handleReportIssue(order.id)}
-                >
-                  <AlertCircle className="mr-2 h-4 w-4" />
-                  Report Issue
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <OrdersList
+        userId={user.id}
+        onAcceptOrder={handleAcceptOrder}
+        onReportIssue={handleReportIssue}
+      />
 
       {user.id && <DriverAnalytics driverId={user.id} />}
 

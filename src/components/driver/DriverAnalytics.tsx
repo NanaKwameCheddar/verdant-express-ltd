@@ -7,15 +7,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DriverAnalyticsProps {
   driverId: string;
 }
 
 export function DriverAnalytics({ driverId }: DriverAnalyticsProps) {
-  const { data: analyticsData, isLoading: isLoadingAnalytics } = useQuery({
+  const { data: analyticsData, isLoading } = useQuery({
     queryKey: ['driverAnalytics', driverId],
     queryFn: async () => {
+      if (!driverId || driverId.length !== 36) return null;
+      
       const { data, error } = await supabase
         .from('driver_analytics')
         .select('*')
@@ -25,11 +28,27 @@ export function DriverAnalytics({ driverId }: DriverAnalyticsProps) {
       if (error) throw error;
       return data;
     },
-    enabled: !!driverId && driverId.length === 36, // Only run query if we have a valid UUID
+    enabled: !!driverId && driverId.length === 36,
   });
 
-  if (isLoadingAnalytics) {
-    return <div>Loading analytics...</div>;
+  if (isLoading) {
+    return (
+      <Card className="mb-8">
+        <CardHeader>
+          <Skeleton className="h-6 w-40" />
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="p-4 rounded-lg bg-primary/10">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (!analyticsData) {
