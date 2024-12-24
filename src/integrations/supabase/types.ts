@@ -39,58 +39,6 @@ export type Database = {
         }
         Relationships: []
       }
-      feedback: {
-        Row: {
-          created_at: string | null
-          feedback_text: string | null
-          feedback_type: string | null
-          id: string
-          order_id: string | null
-          rating: number | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          feedback_text?: string | null
-          feedback_type?: string | null
-          id?: string
-          order_id?: string | null
-          rating?: number | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          feedback_text?: string | null
-          feedback_type?: string | null
-          id?: string
-          order_id?: string | null
-          rating?: number | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "feedback_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "parcel_orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "feedback_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "driver_analytics"
-            referencedColumns: ["driver_id"]
-          },
-          {
-            foreignKeyName: "feedback_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       locations: {
         Row: {
           id: string
@@ -185,22 +133,8 @@ export type Database = {
             foreignKeyName: "parcel_orders_assigned_driver_id_fkey"
             columns: ["assigned_driver_id"]
             isOneToOne: false
-            referencedRelation: "driver_analytics"
-            referencedColumns: ["driver_id"]
-          },
-          {
-            foreignKeyName: "parcel_orders_assigned_driver_id_fkey"
-            columns: ["assigned_driver_id"]
-            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "parcel_orders_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "driver_analytics"
-            referencedColumns: ["driver_id"]
           },
           {
             foreignKeyName: "parcel_orders_customer_id_fkey"
@@ -275,16 +209,7 @@ export type Database = {
       }
     }
     Views: {
-      driver_analytics: {
-        Row: {
-          average_rating: number | null
-          completed_deliveries: number | null
-          driver_id: string | null
-          driver_name: string | null
-          total_deliveries: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       handle_payment_success: {
