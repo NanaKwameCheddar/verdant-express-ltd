@@ -4,7 +4,6 @@ import { UserManagement } from "@/components/admin/UserManagement"
 import { ParcelManagement } from "@/components/admin/ParcelManagement"
 import { Analytics } from "@/components/admin/Analytics"
 import { SystemLogs } from "@/components/admin/SystemLogs"
-import { Feedback } from "@/components/admin/Feedback"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 import { LogOut } from "lucide-react"
@@ -15,6 +14,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
+    // TODO: Implement actual logout logic when Supabase is integrated
     toast({
       title: "Logged out successfully",
       description: "You have been logged out of your account",
@@ -33,11 +33,10 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-[500px]">
+        <TabsList className="grid w-full grid-cols-4 lg:w-[400px]">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="parcels">Parcels</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="feedback">Feedback</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
         </TabsList>
 
@@ -51,10 +50,6 @@ export default function AdminDashboard() {
 
         <TabsContent value="analytics" className="space-y-4">
           <Analytics />
-        </TabsContent>
-
-        <TabsContent value="feedback" className="space-y-4">
-          <Feedback />
         </TabsContent>
 
         <TabsContent value="logs" className="space-y-4">

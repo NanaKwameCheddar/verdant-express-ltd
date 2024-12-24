@@ -1,184 +1,107 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { DeliveryCard } from "@/components/DeliveryCard";
+import { SearchBar } from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
+import { Menu, Package } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { Search, ShoppingCart, Package, LogOut } from "lucide-react";
+
+// Mock data for delivery services
+const deliveryServices = [
+  {
+    id: 1,
+    name: "Same Day Delivery",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d",
+    price: "GHC 35-45",
+    category: "Same Day",
+    estimatedTime: "2-4 hours"
+  },
+  {
+    id: 2,
+    name: "Next Day Delivery",
+    image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088",
+    price: "GHC 25-30",
+    category: "Next Day",
+    estimatedTime: "24 hours"
+  },
+  {
+    id: 3,
+    name: "Economy Delivery",
+    image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59",
+    price: "Redeem Coupon",
+    category: "Economy",
+    estimatedTime: "2-3 days"
+  }
+];
 
 export default function Customer() {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { user, signOut } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [recentOrders, setRecentOrders] = useState([]);
+  const { logout } = useAuth();
 
-  useEffect(() => {
-    // Fetch recent orders
-    const fetchRecentOrders = async () => {
-      const { data, error } = await supabase
-        .from("parcel_orders") // Changed from "orders" to "parcel_orders"
-        .select("*")
-        .eq("customer_id", user?.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (error) {
-        console.error("Error fetching recent orders:", error);
-        return;
-      }
-
-      setRecentOrders(data || []);
-    };
-
-    if (user) {
-      fetchRecentOrders();
-    }
-  }, [user]);
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Logged out successfully",
-        description: "You have been logged out of your account",
-      });
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
-      toast({
-        title: "Error",
-        description: "There was a problem logging out",
-        variant: "destructive",
-      });
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="flex flex-col items-center mb-8">
-        <img src="/logo.png" alt="Logo" className="w-32 h-32 rounded-lg mx-auto mb-8" />
-        <div className="flex w-full max-w-lg gap-2">
-          <Input
-            type="text"
-            placeholder="Search for stores or items..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          <Button onClick={handleSearch}>
-            <Search className="h-4 w-4" />
-          </Button>
+    <div className="min-h-screen flex flex-col w-full">
+      <header className="border-b p-4">
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="/lovable-uploads/423456c0-e86c-4c12-9e6a-212fb9ec9bf2.png"
+              alt="Verdant Express LTD"
+              className="h-8"
+            />
+            <span className="text-xl font-bold">Verdant Express</span>
+          </Link>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-4">
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              onClick={() => navigate("/search")}
-            >
-              <Search className="h-6 w-6" />
-              Browse Stores
-            </Button>
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              onClick={() => navigate("/cart")}
-            >
-              <ShoppingCart className="h-6 w-6" />
-              View Cart
-            </Button>
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              onClick={() => navigate("/orders")}
-            >
-              <Package className="h-6 w-6" />
-              Track Orders
-            </Button>
-            <Button
-              variant="outline"
-              className="h-24 flex flex-col gap-2"
-              onClick={handleLogout}
-            >
-              <LogOut className="h-6 w-6" />
-              Logout
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {recentOrders.length > 0 ? (
-              <div className="space-y-4">
-                {recentOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="flex justify-between items-center p-2 rounded-lg bg-secondary"
-                  >
-                    <div>
-                      <p className="font-medium">Order #{order.id}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(order.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      onClick={() => navigate(`/orders/${order.id}`)}
-                    >
-                      View
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground">
-                No recent orders found
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Featured Stores</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Mock featured stores - replace with actual data */}
-            {[1, 2, 3].map((store) => (
-              <Card key={store} className="store-card">
-                <CardContent className="p-4">
-                  <div className="aspect-video bg-muted rounded-lg mb-2" />
-                  <h3 className="font-medium">Store {store}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Featured store description
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+      </header>
+      <main className="flex-1 p-6">
+        <div className="flex justify-end mb-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => navigate("/")}>Home</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/profile")}>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/search")}>Search</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/cart")}>Cart</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/orders")}>Orders</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold tracking-tight">Fast & Reliable Package Delivery</h1>
+            <p className="text-lg text-muted-foreground">
+              Send packages anywhere with real-time tracking and guaranteed delivery
+            </p>
           </div>
-        </CardContent>
-      </Card>
+
+          <SearchBar />
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-6">Delivery Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {deliveryServices.map((service) => (
+                <DeliveryCard key={service.id} {...service} />
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
     </div>
   );
 }
