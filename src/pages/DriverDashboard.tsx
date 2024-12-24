@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FeedbackForm } from "@/components/driver/FeedbackForm";
+import { DriverAnalytics } from "@/components/driver/DriverAnalytics";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -20,16 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Package, AlertCircle, LogOut, TrendingUp } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+import { MapPin, Package, AlertCircle, LogOut } from "lucide-react";
 
 export default function DriverDashboard() {
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
@@ -39,38 +31,24 @@ export default function DriverDashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  // Fetch driver analytics
-  const { data: analyticsData, isLoading: isLoadingAnalytics } = useQuery({
-    queryKey: ['driverAnalytics', user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('driver_analytics')
-        .select('*')
-        .eq('driver_id', user?.id)
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id,
-  });
-
-  // Fetch orders
+  // Fetch orders with proper UUID validation
   const { data: orders = [], isLoading: isLoadingOrders } = useQuery({
     queryKey: ['driverOrders', user?.id],
     queryFn: async () => {
+      if (!user?.id) throw new Error('User ID is required');
+      
       const { data, error } = await supabase
         .from('parcel_orders')
         .select(`
           *,
           feedback(rating, feedback_text)
         `)
-        .eq('assigned_driver_id', user?.id);
+        .eq('assigned_driver_id', user.id);
 
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && user.id.length === 36, // Only run query if we have a valid UUID
   });
 
   useEffect(() => {
@@ -90,28 +68,30 @@ export default function DriverDashboard() {
     }
 
     // Set up real-time subscription for new orders
-    const ordersSubscription = supabase
-      .channel('orders')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'parcel_orders',
-          filter: `assigned_driver_id=eq.${user?.id}`,
-        },
-        (payload) => {
-          toast({
-            title: "New Order Assigned!",
-            description: "You have a new delivery order.",
-          });
-        }
-      )
-      .subscribe();
+    if (user?.id) {
+      const ordersSubscription = supabase
+        .channel('orders')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'parcel_orders',
+            filter: `assigned_driver_id=eq.${user.id}`,
+          },
+          (payload) => {
+            toast({
+              title: "New Order Assigned!",
+              description: "You have a new delivery order.",
+            });
+          }
+        )
+        .subscribe();
 
-    return () => {
-      ordersSubscription.unsubscribe();
-    };
+      return () => {
+        ordersSubscription.unsubscribe();
+      };
+    }
   }, [user?.id]);
 
   const handleAcceptOrder = async (orderId: string) => {
@@ -155,8 +135,12 @@ export default function DriverDashboard() {
     navigate('/login');
   };
 
-  if (isLoadingOrders || isLoadingAnalytics) {
+  if (isLoadingOrders) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (!user?.id) {
+    return <div className="flex items-center justify-center min-h-screen">Please log in to continue</div>;
   }
 
   return (
@@ -224,34 +208,7 @@ export default function DriverDashboard() {
         ))}
       </div>
 
-      {analyticsData && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Your Performance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-3 mb-6">
-              <div className="p-4 rounded-lg bg-primary/10">
-                <div className="text-sm text-muted-foreground">Total Deliveries</div>
-                <div className="text-2xl font-bold">{analyticsData.total_deliveries}</div>
-              </div>
-              <div className="p-4 rounded-lg bg-primary/10">
-                <div className="text-sm text-muted-foreground">Completed Deliveries</div>
-                <div className="text-2xl font-bold">{analyticsData.completed_deliveries}</div>
-              </div>
-              <div className="p-4 rounded-lg bg-primary/10">
-                <div className="text-sm text-muted-foreground">Average Rating</div>
-                <div className="text-2xl font-bold">
-                  {analyticsData.average_rating ? analyticsData.average_rating.toFixed(1) : 'N/A'}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {user.id && <DriverAnalytics driverId={user.id} />}
 
       <Dialog open={showFeedback} onOpenChange={setShowFeedback}>
         <DialogContent>
