@@ -16,8 +16,6 @@ import DriverDashboard from "./pages/DriverDashboard";
 import OrderPlacement from "./pages/OrderPlacement";
 import RatingForm from "./components/RatingForm";
 
-const queryClient = new QueryClient();
-
 // Home redirect component based on user role
 const HomeRedirect = () => {
   const { user } = useAuth();
@@ -36,31 +34,43 @@ const HomeRedirect = () => {
   }
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/" element={<HomeRedirect />} />
-            <Route path="/customer" element={<Customer />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/driver" element={<DriverDashboard />} />
-            <Route path="/order-placement" element={<OrderPlacement />} />
-            <Route path="/rate/:type/:id" element={<RatingForm />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Move queryClient inside component
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/" element={<HomeRedirect />} />
+              <Route path="/customer" element={<Customer />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/driver" element={<DriverDashboard />} />
+              <Route path="/order-placement" element={<OrderPlacement />} />
+              <Route path="/rate/:type/:id" element={<RatingForm />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
