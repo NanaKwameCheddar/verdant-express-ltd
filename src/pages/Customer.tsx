@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,7 +20,7 @@ export default function Customer() {
     // Fetch recent orders
     const fetchRecentOrders = async () => {
       const { data, error } = await supabase
-        .from("orders")
+        .from("parcel_orders") // Changed from "orders" to "parcel_orders"
         .select("*")
         .eq("customer_id", user?.id)
         .order("created_at", { ascending: false })
