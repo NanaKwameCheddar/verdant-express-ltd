@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FeedbackForm } from "@/components/driver/FeedbackForm";
+import { DriverAnalytics } from "@/components/driver/DriverAnalytics";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -99,7 +100,7 @@ export default function DriverDashboard() {
           <img
             src="/lovable-uploads/423456c0-e86c-4c12-9e6a-212fb9ec9bf2.png"
             alt="Verdant Express LTD"
-            className="h-8"
+            className="h-8 rounded-lg"
           />
           <h1 className="text-3xl font-bold">Driver Dashboard</h1>
         </div>
@@ -115,7 +116,10 @@ export default function DriverDashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="space-y-6">
+        <DriverAnalytics />
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {orders.map((order) => (
           <Card key={order.id}>
             <CardHeader>
@@ -159,6 +163,7 @@ export default function DriverDashboard() {
             </CardContent>
           </Card>
         ))}
+        </div>
       </div>
 
       <Dialog open={showFeedback} onOpenChange={setShowFeedback}>
