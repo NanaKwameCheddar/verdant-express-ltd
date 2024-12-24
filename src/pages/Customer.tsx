@@ -1,4 +1,3 @@
-```tsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Truck, Clock, LogOut } from "lucide-react";
 
-export default function Customer() {
+const Customer = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const fetchRecentOrders = async () => {
@@ -32,7 +31,7 @@ export default function Customer() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await logout();
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -122,5 +121,6 @@ export default function Customer() {
       </div>
     </div>
   );
-}
-```
+};
+
+export default Customer;

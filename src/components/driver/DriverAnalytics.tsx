@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export function DriverAnalytics() {
   const { user } = useAuth();
@@ -11,9 +10,9 @@ export function DriverAnalytics() {
     queryKey: ['driverAnalytics', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('driver_analytics_view')
-        .select('*')
-        .eq('driver_id', user?.id)
+        .from("driver_analytics")
+        .select("*")
+        .eq("driver_id", user?.id)
         .single();
 
       if (error) throw error;
