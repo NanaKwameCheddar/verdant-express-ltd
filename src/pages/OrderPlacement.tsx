@@ -4,11 +4,17 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function OrderPlacement() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [mapLink, setMapLink] = useState("");
+  const [deliveryOption, setDeliveryOption] = useState("standard");
+  const [timeSlot, setTimeSlot] = useState("");
+  const [couponCode, setCouponCode] = useState("");
   
   const [formData, setFormData] = useState({
     sender: {
@@ -26,9 +32,9 @@ export default function OrderPlacement() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate required fields
     if (!formData.sender.name || !formData.sender.phone || !formData.sender.address ||
-        !formData.recipient.name || !formData.recipient.phone || !formData.recipient.address) {
+        !formData.recipient.name || !formData.recipient.phone || !formData.recipient.address ||
+        !deliveryOption || !timeSlot) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
@@ -54,6 +60,14 @@ export default function OrderPlacement() {
     }));
   };
 
+  const timeSlots = [
+    "09:00 - 11:00",
+    "11:00 - 13:00",
+    "13:00 - 15:00",
+    "15:00 - 17:00",
+    "17:00 - 19:00"
+  ];
+
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-2xl mx-auto space-y-6">
@@ -69,7 +83,7 @@ export default function OrderPlacement() {
               <div className="space-y-4">
                 <h3 className="font-semibold">Sender Details</h3>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Name *</label>
+                  <Label>Name *</Label>
                   <Input
                     value={formData.sender.name}
                     onChange={(e) => handleInputChange('sender', 'name', e.target.value)}
@@ -77,7 +91,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone *</label>
+                  <Label>Phone *</Label>
                   <Input
                     type="tel"
                     value={formData.sender.phone}
@@ -86,7 +100,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Pickup Address *</label>
+                  <Label>Pickup Address *</Label>
                   <Input
                     value={formData.sender.address}
                     onChange={(e) => handleInputChange('sender', 'address', e.target.value)}
@@ -99,7 +113,7 @@ export default function OrderPlacement() {
               <div className="space-y-4">
                 <h3 className="font-semibold">Recipient Details</h3>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Name *</label>
+                  <Label>Name *</Label>
                   <Input
                     value={formData.recipient.name}
                     onChange={(e) => handleInputChange('recipient', 'name', e.target.value)}
@@ -107,7 +121,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone *</label>
+                  <Label>Phone *</Label>
                   <Input
                     type="tel"
                     value={formData.recipient.phone}
@@ -116,7 +130,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Delivery Address *</label>
+                  <Label>Delivery Address *</Label>
                   <Input
                     value={formData.recipient.address}
                     onChange={(e) => handleInputChange('recipient', 'address', e.target.value)}
@@ -125,9 +139,59 @@ export default function OrderPlacement() {
                 </div>
               </div>
 
+              {/* Delivery Options */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Delivery Options</h3>
+                <RadioGroup
+                  value={deliveryOption}
+                  onValueChange={setDeliveryOption}
+                  className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="same-day" id="same-day" />
+                    <Label htmlFor="same-day">Same Day Delivery</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="next-day" id="next-day" />
+                    <Label htmlFor="next-day">Next Day Delivery</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="standard" id="standard" />
+                    <Label htmlFor="standard">Standard Delivery</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {/* Time Slot Selection */}
+              <div className="space-y-2">
+                <Label>Preferred Time Slot *</Label>
+                <Select value={timeSlot} onValueChange={setTimeSlot}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a time slot" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeSlots.map((slot) => (
+                      <SelectItem key={slot} value={slot}>
+                        {slot}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Coupon Code */}
+              <div className="space-y-2">
+                <Label>Coupon Code</Label>
+                <Input
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  placeholder="Enter coupon code if available"
+                />
+              </div>
+
               {/* Google Maps Link */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Google Maps Location Link (Optional)</label>
+                <Label>Google Maps Location Link (Optional)</Label>
                 <Input
                   value={mapLink}
                   onChange={(e) => setMapLink(e.target.value)}
