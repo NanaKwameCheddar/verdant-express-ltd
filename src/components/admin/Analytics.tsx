@@ -1,221 +1,4 @@
-import React from 'react';
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './Card'; // Adjust path as needed
-import { Package } from 'react-icons/all'; // Replace with actual icon import path
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from './Select'; // Adjust path as needed
-
-// Sample Data
-const deliveryData = [
-  { name: 'Mon', deliveries: 30, revenue: 500 },
-  { name: 'Tue', deliveries: 40, revenue: 700 },
-  { name: 'Wed', deliveries: 35, revenue: 600 },
-  { name: 'Thu', deliveries: 50, revenue: 1000 },
-  { name: 'Fri', deliveries: 45, revenue: 850 },
-  { name: 'Sat', deliveries: 20, revenue: 300 },
-  { name: 'Sun', deliveries: 25, revenue: 400 },
-];
-
-const driverData = [
-  { name: 'Driver A', deliveries: 50 },
-  { name: 'Driver B', deliveries: 30 },
-  { name: 'Driver C', deliveries: 20 },
-  { name: 'Driver D', deliveries: 10 },
-];
-
-const statusData = [
-  { name: 'Delivered', value: 50 },
-  { name: 'Pending', value: 30 },
-  { name: 'Failed', value: 20 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
-
-export function Analytics() {
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
-        <Select defaultValue="week">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select timeframe" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="day">Last 24 Hours</SelectItem>
-            <SelectItem value="week">Last Week</SelectItem>
-            <SelectItem value="month">Last Month</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Cards */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Parcels</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">31</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Drivers</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">
-              +5% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">150</div>
-            <p className="text-xs text-muted-foreground">
-              +10% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$15,000</div>
-            <p className="text-xs text-muted-foreground">
-              +12.5% from last month
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Weekly Deliveries & Revenue</CardTitle>
-            <CardDescription>
-              Delivery count and revenue trends
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <LineChart width={500} height={300} data={deliveryData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Legend />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="deliveries"
-                stroke="#8884d8"
-                name="Deliveries"
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="revenue"
-                stroke="#82ca9d"
-                name="Revenue ($)"
-              />
-            </LineChart>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Deliveries by Driver</CardTitle>
-            <CardDescription>
-              Total deliveries completed by each driver
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BarChart width={500} height={300} data={driverData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="deliveries" fill="#3b82f6" />
-            </BarChart>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Parcel Status Distribution</CardTitle>
-            <CardDescription>
-              Current distribution of parcel statuses
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PieChart width={400} height={300}>
-              <Pie
-                data={statusData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) =>
-                  `${name} ${(percent * 100).toFixed(0)}%`
-                }
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {statusData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* import {
   Card,
   CardContent,
   CardDescription,
@@ -387,13 +170,13 @@ export function Analytics() {
             <ChartContainer className="h-[300px]" config={lineChartConfig}>
               <LineChart data={deliveryData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                {/* <XAxis dataKey="name" />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
                 <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
-                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
+                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" /> */}
               </LineChart>
             </ChartContainer>
           </CardContent>
@@ -410,10 +193,10 @@ export function Analytics() {
             <ChartContainer className="h-[300px]" config={barChartConfig}>
               <BarChart data={driverData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                {/* <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip content={<ChartTooltip />} />
-                <Bar dataKey="deliveries" fill="#3b82f6" />
+                <Bar dataKey="deliveries" fill="#3b82f6" /> */}
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -429,7 +212,7 @@ export function Analytics() {
           <CardContent>
             <ChartContainer className="h-[300px]" config={pieChartConfig}>
               <PieChart>
-                <Pie
+               {/*  <Pie>
                   data={statusData}
                   cx="50%"
                   cy="50%"
@@ -438,12 +221,12 @@ export function Analytics() {
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
-                >
+                
                   {statusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
-                </Pie>
-                <Tooltip content={<ChartTooltip />} />
+                </Pie> */}
+                {/* <Tooltip content={<ChartTooltip />} /> */}
               </PieChart>
             </ChartContainer>
           </CardContent>
@@ -451,4 +234,4 @@ export function Analytics() {
       </div>
     </div>
   )
-} */
+}
