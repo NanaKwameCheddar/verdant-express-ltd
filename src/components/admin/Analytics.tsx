@@ -170,13 +170,13 @@ export function Analytics() {
             <ChartContainer className="h-[300px]" config={lineChartConfig}>
               <LineChart data={deliveryData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                {/* <XAxis dataKey="name" />
+                <XAxis dataKey="name" />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
                 <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
-                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" /> */}
+                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
               </LineChart>
             </ChartContainer>
           </CardContent>
@@ -193,10 +193,10 @@ export function Analytics() {
             <ChartContainer className="h-[300px]" config={barChartConfig}>
               <BarChart data={driverData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                {/* <XAxis dataKey="name" />
+                <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip content={<ChartTooltip />} />
-                <Bar dataKey="deliveries" fill="#3b82f6" /> */}
+                <Bar dataKey="deliveries" fill="#3b82f6" />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -212,7 +212,7 @@ export function Analytics() {
           <CardContent>
             <ChartContainer className="h-[300px]" config={pieChartConfig}>
               <PieChart>
-               {/*  <Pie>
+               <Pie>
                   data={statusData}
                   cx="50%"
                   cy="50%"
@@ -225,7 +225,7 @@ export function Analytics() {
                   {statusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
-                </Pie> */}
+                </Pie>
                 {/* <Tooltip content={<ChartTooltip />} /> */}
               </PieChart>
             </ChartContainer>
