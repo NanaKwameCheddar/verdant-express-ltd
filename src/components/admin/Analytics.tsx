@@ -1,54 +1,30 @@
-import React from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
 import { 
-  LineChart, 
-  Line, 
   BarChart, 
   Bar, 
-  PieChart, 
-  Pie, 
-  Cell, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend 
-} from 'recharts';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
-import { Package, TrendingUp, Truck, Users } from "lucide-react";
-import { 
-  Select, 
-  SelectTrigger, 
-  SelectContent, 
-  SelectItem, 
-  SelectValue 
-} from "@/components/ui/select";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-
-// Types for chart data
-interface DeliveryData {
-  name: string;
-  deliveries: number;
-  revenue: number;
-}
-
-interface DriverData {
-  name: string;
-  deliveries: number;
-}
-
-interface StatusData {
-  name: string;
-  value: number;
-}
+  PieChart, 
+  Pie, 
+  Cell,
+  LineChart,
+  Line,
+  Legend
+} from "recharts"
+import { Package, TrendingUp, Truck, Users } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Mock data - replace with actual data when Supabase is integrated
-const deliveryData: DeliveryData[] = [
+const deliveryData = [
   { name: "Mon", deliveries: 4, revenue: 400 },
   { name: "Tue", deliveries: 3, revenue: 300 },
   { name: "Wed", deliveries: 7, revenue: 700 },
@@ -56,39 +32,25 @@ const deliveryData: DeliveryData[] = [
   { name: "Fri", deliveries: 6, revenue: 600 },
   { name: "Sat", deliveries: 4, revenue: 400 },
   { name: "Sun", deliveries: 2, revenue: 200 },
-];
+]
 
-const driverData: DriverData[] = [
+const driverData = [
   { name: "John", deliveries: 15 },
   { name: "Mike", deliveries: 12 },
   { name: "Sarah", deliveries: 18 },
   { name: "David", deliveries: 10 },
-];
+]
 
-const statusData: StatusData[] = [
+const statusData = [
   { name: "Pending", value: 10 },
   { name: "In Transit", value: 15 },
   { name: "Delivered", value: 25 },
-];
+]
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28"]
 
-// Chart configurations with proper typing
-interface ChartTheme {
-  light: string;
-  dark: string;
-}
-
-interface ChartConfigItem {
-  label: string;
-  theme: ChartTheme;
-}
-
-interface ChartConfig {
-  [key: string]: ChartConfigItem;
-}
-
-const lineChartConfig: ChartConfig = {
+// Chart configurations
+const lineChartConfig = {
   deliveries: {
     label: "Deliveries",
     theme: {
@@ -103,9 +65,9 @@ const lineChartConfig: ChartConfig = {
       dark: "#82ca9d"
     }
   }
-};
+}
 
-const barChartConfig: ChartConfig = {
+const barChartConfig = {
   deliveries: {
     label: "Deliveries",
     theme: {
@@ -113,9 +75,9 @@ const barChartConfig: ChartConfig = {
       dark: "#3b82f6"
     }
   }
-};
+}
 
-const pieChartConfig: ChartConfig = {
+const pieChartConfig = {
   status: {
     label: "Status",
     theme: {
@@ -123,18 +85,9 @@ const pieChartConfig: ChartConfig = {
       dark: "#8884d8"
     }
   }
-};
-
-interface PieChartLabelProps {
-  name: string;
-  percent: number;
 }
 
 export function Analytics() {
-  const renderPieChartLabel = ({ name, percent }: PieChartLabelProps): string => {
-    return `${name} ${(percent * 100).toFixed(0)}%`;
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -151,7 +104,7 @@ export function Analytics() {
         </Select>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Parcels</CardTitle>
@@ -205,7 +158,7 @@ export function Analytics() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+     {/* <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Weekly Deliveries & Revenue</CardTitle>
@@ -222,20 +175,8 @@ export function Analytics() {
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
-                <Line 
-                  yAxisId="left" 
-                  type="monotone" 
-                  dataKey="deliveries" 
-                  stroke="#8884d8" 
-                  name="Deliveries" 
-                />
-                <Line 
-                  yAxisId="right" 
-                  type="monotone" 
-                  dataKey="revenue" 
-                  stroke="#82ca9d" 
-                  name="Revenue ($)" 
-                />
+                <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
+                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
               </LineChart>
             </ChartContainer>
           </CardContent>
@@ -276,16 +217,13 @@ export function Analytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={renderPieChartLabel}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
                 >
                   {statusData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={COLORS[index % COLORS.length]} 
-                    />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip content={<ChartTooltip />} />
@@ -293,7 +231,7 @@ export function Analytics() {
             </ChartContainer>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
-  );
+  )
 }

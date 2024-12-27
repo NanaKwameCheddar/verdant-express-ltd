@@ -4,17 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function OrderPlacement() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [mapLink, setMapLink] = useState("");
-  const [deliveryOption, setDeliveryOption] = useState("next-day");
-  const [timeSlot, setTimeSlot] = useState("");
-  const [couponCode, setCouponCode] = useState("");
   
   const [formData, setFormData] = useState({
     sender: {
@@ -32,12 +26,12 @@ export default function OrderPlacement() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields
     if (!formData.sender.name || !formData.sender.phone || !formData.sender.address ||
-        !formData.recipient.name || !formData.recipient.phone || !formData.recipient.address ||
-        !timeSlot) {
+        !formData.recipient.name || !formData.recipient.phone || !formData.recipient.address) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields including delivery time slot",
+        description: "Please fill in all required fields",
         variant: "destructive"
       });
       return;
@@ -71,49 +65,11 @@ export default function OrderPlacement() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Delivery Options */}
-              <div className="space-y-4">
-                <h3 className="font-semibold">Delivery Options</h3>
-                <RadioGroup
-                  defaultValue="next-day"
-                  onValueChange={setDeliveryOption}
-                  className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="same-day" id="same-day" />
-                    <Label htmlFor="same-day">Same Day Delivery</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="next-day" id="next-day" />
-                    <Label htmlFor="next-day">Next Day Delivery</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="standard" id="standard" />
-                    <Label htmlFor="standard">Standard (2-3 days)</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              {/* Time Slot Selection */}
-              <div className="space-y-2">
-                <Label>Preferred Delivery Time*</Label>
-                <Select onValueChange={setTimeSlot} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select delivery time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="morning">Morning (9AM - 12PM)</SelectItem>
-                    <SelectItem value="afternoon">Afternoon (12PM - 4PM)</SelectItem>
-                    <SelectItem value="evening">Evening (4PM - 8PM)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               {/* Sender Details */}
               <div className="space-y-4">
                 <h3 className="font-semibold">Sender Details</h3>
                 <div className="space-y-2">
-                  <Label>Name *</Label>
+                  <label className="text-sm font-medium">Name *</label>
                   <Input
                     value={formData.sender.name}
                     onChange={(e) => handleInputChange('sender', 'name', e.target.value)}
@@ -121,7 +77,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Phone *</Label>
+                  <label className="text-sm font-medium">Phone *</label>
                   <Input
                     type="tel"
                     value={formData.sender.phone}
@@ -130,7 +86,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Pickup Address *</Label>
+                  <label className="text-sm font-medium">Pickup Address *</label>
                   <Input
                     value={formData.sender.address}
                     onChange={(e) => handleInputChange('sender', 'address', e.target.value)}
@@ -143,7 +99,7 @@ export default function OrderPlacement() {
               <div className="space-y-4">
                 <h3 className="font-semibold">Recipient Details</h3>
                 <div className="space-y-2">
-                  <Label>Name *</Label>
+                  <label className="text-sm font-medium">Name *</label>
                   <Input
                     value={formData.recipient.name}
                     onChange={(e) => handleInputChange('recipient', 'name', e.target.value)}
@@ -151,7 +107,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Phone *</Label>
+                  <label className="text-sm font-medium">Phone *</label>
                   <Input
                     type="tel"
                     value={formData.recipient.phone}
@@ -160,7 +116,7 @@ export default function OrderPlacement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Delivery Address *</Label>
+                  <label className="text-sm font-medium">Delivery Address *</label>
                   <Input
                     value={formData.recipient.address}
                     onChange={(e) => handleInputChange('recipient', 'address', e.target.value)}
@@ -169,19 +125,9 @@ export default function OrderPlacement() {
                 </div>
               </div>
 
-              {/* Coupon Code */}
-              <div className="space-y-2">
-                <Label>Coupon Code (Optional)</Label>
-                <Input
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  placeholder="Enter coupon code if available"
-                />
-              </div>
-
               {/* Google Maps Link */}
               <div className="space-y-2">
-                <Label>Google Maps Location Link (Optional)</Label>
+                <label className="text-sm font-medium">Google Maps Location Link (Optional)</label>
                 <Input
                   value={mapLink}
                   onChange={(e) => setMapLink(e.target.value)}
