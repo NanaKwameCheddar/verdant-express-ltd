@@ -165,27 +165,7 @@ export function Analytics() {
         </Card>
       </div>
 
-      <div className="border rounded shadow-sm p-4">
-      <div className="mb-4">
-        <h4 className="text-lg font-semibold">Weekly Deliveries & Revenue</h4>
-        <p className="text-sm text-gray-500">Delivery count and revenue trends</p>
-      </div>
-      <div className="h-[300px]">
-        <LineChart data={deliveryData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis yAxisId="left" />
-          <YAxis yAxisId="right" orientation="right" />
-          <Tooltip content={<div className="bg-gray-200 p-2 rounded">Tooltip</div>} />
-          <Legend />
-          <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
-          <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
-        </LineChart>
-      </div>
-    </div>
-
-      
-     {/*  <div className="grid gap-6 md:grid-cols-2">
+     {/* <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Weekly Deliveries & Revenue</CardTitle>
@@ -207,9 +187,9 @@ export function Analytics() {
               </LineChart>
             </ChartContainer>
           </CardContent>
-        </Card> */}
+        </Card>
 
-        {/*2 <Card>
+        <Card>
           <CardHeader>
             <CardTitle>Deliveries by Driver</CardTitle>
             <CardDescription>
@@ -257,8 +237,8 @@ export function Analytics() {
               </PieChart>
             </ChartContainer>
           </CardContent>
-        </Card> */}
-      </div>
+        </Card>
+      </div>*/}
     </div>
   );
 }
