@@ -30,8 +30,25 @@ import {
 } from "@/components/ui/select";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
+// Types for chart data
+interface DeliveryData {
+  name: string;
+  deliveries: number;
+  revenue: number;
+}
+
+interface DriverData {
+  name: string;
+  deliveries: number;
+}
+
+interface StatusData {
+  name: string;
+  value: number;
+}
+
 // Mock data - replace with actual data when Supabase is integrated
-const deliveryData = [
+const deliveryData: DeliveryData[] = [
   { name: "Mon", deliveries: 4, revenue: 400 },
   { name: "Tue", deliveries: 3, revenue: 300 },
   { name: "Wed", deliveries: 7, revenue: 700 },
@@ -41,14 +58,14 @@ const deliveryData = [
   { name: "Sun", deliveries: 2, revenue: 200 },
 ];
 
-const driverData = [
+const driverData: DriverData[] = [
   { name: "John", deliveries: 15 },
   { name: "Mike", deliveries: 12 },
   { name: "Sarah", deliveries: 18 },
   { name: "David", deliveries: 10 },
 ];
 
-const statusData = [
+const statusData: StatusData[] = [
   { name: "Pending", value: 10 },
   { name: "In Transit", value: 15 },
   { name: "Delivered", value: 25 },
@@ -56,8 +73,22 @@ const statusData = [
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
-// Chart configurations
-const lineChartConfig = {
+// Chart configurations with proper typing
+interface ChartTheme {
+  light: string;
+  dark: string;
+}
+
+interface ChartConfigItem {
+  label: string;
+  theme: ChartTheme;
+}
+
+interface ChartConfig {
+  [key: string]: ChartConfigItem;
+}
+
+const lineChartConfig: ChartConfig = {
   deliveries: {
     label: "Deliveries",
     theme: {
@@ -72,9 +103,9 @@ const lineChartConfig = {
       dark: "#82ca9d"
     }
   }
-}
+};
 
-const barChartConfig = {
+const barChartConfig: ChartConfig = {
   deliveries: {
     label: "Deliveries",
     theme: {
@@ -82,9 +113,9 @@ const barChartConfig = {
       dark: "#3b82f6"
     }
   }
-}
+};
 
-const pieChartConfig = {
+const pieChartConfig: ChartConfig = {
   status: {
     label: "Status",
     theme: {
@@ -92,9 +123,18 @@ const pieChartConfig = {
       dark: "#8884d8"
     }
   }
+};
+
+interface PieChartLabelProps {
+  name: string;
+  percent: number;
 }
 
 export function Analytics() {
+  const renderPieChartLabel = ({ name, percent }: PieChartLabelProps): string => {
+    return `${name} ${(percent * 100).toFixed(0)}%`;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -165,7 +205,7 @@ export function Analytics() {
         </Card>
       </div>
 
-     {/* <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Weekly Deliveries & Revenue</CardTitle>
@@ -182,8 +222,20 @@ export function Analytics() {
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="deliveries" stroke="#8884d8" name="Deliveries" />
-                <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#82ca9d" name="Revenue ($)" />
+                <Line 
+                  yAxisId="left" 
+                  type="monotone" 
+                  dataKey="deliveries" 
+                  stroke="#8884d8" 
+                  name="Deliveries" 
+                />
+                <Line 
+                  yAxisId="right" 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#82ca9d" 
+                  name="Revenue ($)" 
+                />
               </LineChart>
             </ChartContainer>
           </CardContent>
@@ -224,13 +276,16 @@ export function Analytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={renderPieChartLabel}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
                 >
                   {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                    />
                   ))}
                 </Pie>
                 <Tooltip content={<ChartTooltip />} />
@@ -238,7 +293,7 @@ export function Analytics() {
             </ChartContainer>
           </CardContent>
         </Card>
-      </div>*/}
+      </div>
     </div>
   );
 }
