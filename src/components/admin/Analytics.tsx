@@ -1,27 +1,34 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart"
+import React from 'react';
 import { 
+  LineChart, 
+  Line, 
   BarChart, 
   Bar, 
+  PieChart, 
+  Pie, 
+  Cell, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  PieChart, 
-  Pie, 
-  Cell,
-  LineChart,
-  Line,
-  Legend
-} from "recharts"
-import { Package, TrendingUp, Truck, Users } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+  Legend 
+} from 'recharts';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
+import { Package, TrendingUp, Truck, Users } from "lucide-react";
+import { 
+  Select, 
+  SelectTrigger, 
+  SelectContent, 
+  SelectItem, 
+  SelectValue 
+} from "@/components/ui/select";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 
 // Mock data - replace with actual data when Supabase is integrated
 const deliveryData = [
@@ -32,22 +39,22 @@ const deliveryData = [
   { name: "Fri", deliveries: 6, revenue: 600 },
   { name: "Sat", deliveries: 4, revenue: 400 },
   { name: "Sun", deliveries: 2, revenue: 200 },
-]
+];
 
 const driverData = [
   { name: "John", deliveries: 15 },
   { name: "Mike", deliveries: 12 },
   { name: "Sarah", deliveries: 18 },
   { name: "David", deliveries: 10 },
-]
+];
 
 const statusData = [
   { name: "Pending", value: 10 },
   { name: "In Transit", value: 15 },
   { name: "Delivered", value: 25 },
-]
+];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"]
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
 // Chart configurations
 const lineChartConfig = {
@@ -212,7 +219,7 @@ export function Analytics() {
           <CardContent>
             <ChartContainer className="h-[300px]" config={pieChartConfig}>
               <PieChart>
-               <Pie>
+                <Pie
                   data={statusData}
                   cx="50%"
                   cy="50%"
@@ -221,17 +228,17 @@ export function Analytics() {
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
-                
+                >
                   {statusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                {/* <Tooltip content={<ChartTooltip />} /> */}
+                <Tooltip content={<ChartTooltip />} />
               </PieChart>
             </ChartContainer>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }
