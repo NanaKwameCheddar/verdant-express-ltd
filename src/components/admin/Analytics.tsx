@@ -104,7 +104,7 @@ export function Analytics() {
         </Select>
       </div>
 
-       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Parcels</CardTitle>
@@ -158,7 +158,7 @@ export function Analytics() {
         </Card>
       </div>
 
-     {/* <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Weekly Deliveries & Revenue</CardTitle>
@@ -231,7 +231,7 @@ export function Analytics() {
             </ChartContainer>
           </CardContent>
         </Card>
-      </div> */}
+      </div>
     </div>
   )
 }
