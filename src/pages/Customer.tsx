@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, Search, ShoppingCart, Clock, Menu } from "lucide-react";
+import { Package, Search, ShoppingCart, Clock, Menu, Leaf } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -49,7 +49,10 @@ export function Customer() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Welcome to Your Dashboard</h1>
+        <div className="flex items-center gap-2">
+          <Leaf className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold">Verdant Express</h1>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
