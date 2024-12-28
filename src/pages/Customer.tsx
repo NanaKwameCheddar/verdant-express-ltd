@@ -1,57 +1,60 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Package, Search, ShoppingCart, Clock } from "lucide-react";
+import { Package, Truck, ShoppingCart, History, MapPin } from "lucide-react";
 
 export function Customer() {
   const navigate = useNavigate();
 
   const menuItems = [
     {
-      title: "Place New Order",
+      title: "Place Order",
+      icon: <Package className="h-6 w-6" />,
       description: "Create a new delivery request",
-      icon: Package,
       path: "/order-placement"
     },
     {
-      title: "Track Orders",
-      description: "View and track your deliveries",
-      icon: Search,
+      title: "Track Delivery",
+      icon: <Truck className="h-6 w-6" />,
+      description: "Track your current deliveries",
       path: "/orders"
     },
     {
       title: "Shopping Cart",
-      description: "View your pending orders",
-      icon: ShoppingCart,
+      icon: <ShoppingCart className="h-6 w-6" />,
+      description: "View your cart",
       path: "/cart"
     },
     {
       title: "Order History",
-      description: "View your past deliveries",
-      icon: Clock,
+      icon: <History className="h-6 w-6" />,
+      description: "View past orders",
       path: "/orders"
+    },
+    {
+      title: "Saved Addresses",
+      icon: <MapPin className="h-6 w-6" />,
+      description: "Manage your addresses",
+      path: "/profile"
     }
   ];
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Welcome to Your Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-8">Welcome to Your Dashboard</h1>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {menuItems.map((item, index) => (
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {menuItems.map((item) => (
           <Card 
-            key={index} 
-            className="hover:bg-accent cursor-pointer transition-colors"
+            key={item.title}
+            className="cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate(item.path)}
           >
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <item.icon className="h-6 w-6" />
-                <CardTitle className="text-lg">{item.title}</CardTitle>
-              </div>
+            <CardHeader className="flex flex-row items-center gap-4">
+              {item.icon}
+              <CardTitle>{item.title}</CardTitle>
             </CardHeader>
             <CardContent>
-              <CardDescription>{item.description}</CardDescription>
+              <p className="text-sm text-muted-foreground">{item.description}</p>
             </CardContent>
           </Card>
         ))}
